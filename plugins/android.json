@@ -1,0 +1,52 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-google-analytics": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-x-socialsharing": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        }
+    }
+}
