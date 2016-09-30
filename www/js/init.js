@@ -31,7 +31,7 @@ module.exports = (function () {
 		$('body').addClass('legacy');
 	}
 
-	header.setBackLabelText(toLocal(localStrings.back));
+	header.updateLanguageUI();
 
 	function getFeed() {
 		var defaultFeedID = getDefaultFeedID();

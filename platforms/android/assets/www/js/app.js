@@ -459,14 +459,14 @@ var menus = [{
     , sub: toLocal(localStrings.readOffline)
     , feeds: [{
         url: 'http://carnegieendowment.org/rss/solr/?fa=AppDiwanEn'
-        , name: toLocal(localStrings.latestAnalysis)
+        , name: localStrings.latestAnalysis
         , filename: 'diwan-en.json'
         , type: 'json'
         , required: true
         , language: 'en'
     }, {
         url: 'http://carnegieendowment.org/rss/solr/?fa=AppDiwanAr'
-        , name: toLocal(localStrings.latestAnalysis)
+        , name: localStrings.latestAnalysis
         , filename: 'diwan-ar.json'
         , type: 'json'
         , required: true
@@ -827,7 +827,7 @@ $(document)
             $(document.body).removeClass(ai ? 'arabic-ui' : 'english-ui');
             $(document.body).addClass(ai ? 'english-ui' : 'arabic-ui');
             window.__languageForCarnegie = ai ? "en" : "ar";
-            setBackLabelText(toLocal(localStrings.back));
+            updateLanguageUI();
 
 			$('.menu-item').eq(activeIndex).removeClass('active');
 			var newItem = $('.menu-item').eq(ai ? 0 : 1);
@@ -914,15 +914,16 @@ function showStory() {
 	show('.story');
 }
 
-function setBackLabelText (text) {
-	$('header .story .back .label').text(text);
+function updateLanguageUI () {
+	$('header .story .back .label').text(toLocal(localStrings.back));
+	$('#loading-int').text(toLocal(localStrings.loading));
 }
 
 module.exports = {
 	showStoryList: showStoryList
 	, showMenu: showMenu
 	, showStory: showStory
-	, setBackLabelText: setBackLabelText
+	, updateLanguageUI: updateLanguageUI
 };
 },{"./getLocalizedString":12,"./loading":14,"./localizedStrings":15,"./story":19}],14:[function(require,module,exports){
 function hide (){
@@ -1894,6 +1895,7 @@ function createPreviousAndNext() {
 }
 
 function createPage(storyObj) {
+    console.log(storyObj);
   return new Promise(function (resolve, reject) {
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
@@ -1903,7 +1905,7 @@ function createPage(storyObj) {
         addClass: 'top-bar', html: storyObj.docType || ''
       })
       , storyTitle = $('<div/>', {
-        addClass: 'story-title', text: storyObj.title
+        addClass: 'story-title', text: storyObj.title || ''
       })
       , storyImage = $('<img>', {
         src: image, addClass: 'story-image'
@@ -2280,7 +2282,7 @@ module.exports = (function () {
 		$('body').addClass('legacy');
 	}
 
-	header.setBackLabelText(toLocal(localStrings.back));
+	header.updateLanguageUI();
 
 	function getFeed() {
 		var defaultFeedID = getDefaultFeedID();
@@ -2437,7 +2439,7 @@ module.exports = function (filename) {
       }, reject);
     }, reject);
   })
-}
+};
 },{"./getFile":29,"./getFileSystem":33,"./readFile":36}],31:[function(require,module,exports){
 module.exports = function (fileentry) {
 	return new Promise(function (resolve, reject) {
@@ -2523,7 +2525,7 @@ module.exports = function (filewriter, contents) {
   	filewriter.onerror = reject;
     filewriter.write(contents);
   });
-}
+};
 
 
 },{}],39:[function(require,module,exports){
@@ -2719,18 +2721,8 @@ function confirm(message, callback, title, buttonLabels) {
 	navigator.notification.confirm(message, callback, title || config.appName, buttonLabels || defaults);
 }
 
-function y(message) {
-	alert(message || 'Yes', $.noop, 'W1N', 'MOAR!!!')
-}
-
-function n(message) {
-	alert(message || 'No', $.noop, 'FA1L', 'Try again!')
-}
-
 module.exports = {
 	alert: alert,
-	confirm: confirm,
-	y: y,
-	n: n
+	confirm: confirm
 };
 },{"../app/config":8,"../app/ui/getLocalizedString":12,"../app/ui/localizedStrings":15}]},{},[22]);

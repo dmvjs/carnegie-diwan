@@ -16,17 +16,7 @@ function confirm(message, callback, title, buttonLabels) {
 	navigator.notification.confirm(message, callback, title || config.appName, buttonLabels || defaults);
 }
 
-function y(message) {
-	alert(message || 'Yes', $.noop, 'W1N', 'MOAR!!!')
-}
-
-function n(message) {
-	alert(message || 'No', $.noop, 'FA1L', 'Try again!')
-}
-
 module.exports = {
 	alert: alert,
-	confirm: confirm,
-	y: y,
-	n: n
+	confirm: confirm
 };

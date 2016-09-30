@@ -4,5 +4,5 @@ module.exports = function (filewriter, contents) {
   	filewriter.onerror = reject;
     filewriter.write(contents);
   });
-}
+};
 

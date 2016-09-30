@@ -2,7 +2,6 @@
 var removeFile = require('./removeFile');
 
 module.exports = function (fileentry) {
-	debugger;
 	var reader = new FileReader()
 		, errorHandler = window.onerror
 		, restoreHandler = function () {

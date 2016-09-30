@@ -42,7 +42,7 @@ $(document)
             $(document.body).removeClass(ai ? 'arabic-ui' : 'english-ui');
             $(document.body).addClass(ai ? 'english-ui' : 'arabic-ui');
             window.__languageForCarnegie = ai ? "en" : "ar";
-            setBackLabelText(toLocal(localStrings.back));
+            updateLanguageUI();
 
 			$('.menu-item').eq(activeIndex).removeClass('active');
 			var newItem = $('.menu-item').eq(ai ? 0 : 1);
@@ -129,13 +129,14 @@ function showStory() {
 	show('.story');
 }
 
-function setBackLabelText (text) {
-	$('header .story .back .label').text(text);
+function updateLanguageUI () {
+	$('header .story .back .label').text(toLocal(localStrings.back));
+	$('#loading-int').text(toLocal(localStrings.loading));
 }
 
 module.exports = {
 	showStoryList: showStoryList
 	, showMenu: showMenu
 	, showStory: showStory
-	, setBackLabelText: setBackLabelText
+	, updateLanguageUI: updateLanguageUI
 };
