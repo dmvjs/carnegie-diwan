@@ -8,8 +8,7 @@ module.exports = function (filename, contents) {
 	return new Promise(function (resolve, reject) {
 
 		// full set of Crockford's problem characters https://github.com/douglascrockford/JSON-js/blob/master/json2.js
-		//[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff
-		var reg = /[\u000a\u000d\u2028\u2029]/g; // known problem characters, line terminators
+		var reg = /[\u0000\u000a\u000d\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g; // known problem characters, line terminators
 		contents = contents.replace(reg, '');
 
 		try {

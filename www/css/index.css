@@ -280,7 +280,7 @@ header .menu .offline {
 
 header .story .back {
     height: 44px;
-    width: 100px;
+    /*width: 100px*/
     float: left;
 }
 
@@ -296,9 +296,10 @@ header .story .back .arrow {
 }
 
 header .story .back .label {
-    width: 60px;
+    /*width: 60px;*/
+    overflow: auto;
     color: white;
-    height: 44px;
+    /*height: 44px;*/
     display: inline-block;
     text-align: left;
     line-height: 44px;
@@ -598,7 +599,7 @@ section.story-list li:first-of-type .story-item .story-title {
     font-size: 1.5em;
     height: auto;
     overflow: visible;
-    padding: 10px 0 12px;
+    padding: 10px 0 10px;
 }
 
 section.story-list .story-item .story-author,
@@ -614,7 +615,13 @@ section.story-list .story-item .story-author {
     font-weight: bold;
 }
 
-section.story-list li:first-of-type .story-item .story-author,
+section.story-list li:first-of-type .story-item .story-author {
+    color: white;
+    display: block;
+    margin: 0 4px;
+    padding: 0 0 12px;
+}
+
 section.story-list li:first-of-type .story-item .story-date {
     display: none;
 }
@@ -625,11 +632,18 @@ section.story-list li:first-of-type .story-item .story-date {
     color: white;
 }
 
+.tablet section.story-list li:first-of-type .story-item .story-title {
+    padding: 10px 0 12px;
+}
 .tablet section.story-list li:first-of-type .story-item .story-title,
 .tablet section.story-list li:first-of-type .story-item .story-author,
 .tablet section.story-list li:first-of-type .story-item .story-date {
     margin-left: 15px;
     margin-right: 15px;
+}
+
+.tablet section.story-list li:first-of-type .story-item .story-author {
+    padding: 0 0 4px;
 }
 
 section.story-list .story-image {
@@ -1013,6 +1027,21 @@ section.story .story-top {
 section.story .story-image {
     width: 100%;
     display: block;
+}
+
+section.story .story-special-image-container {
+    height: 22px;
+    overflow: auto;
+    position: absolute;
+    top: 20px;
+}
+
+.tablet section.story .story-special-image-container {
+    height: 44px;
+}
+
+section.story .story-special-image-container img {
+    max-height: 100%;
 }
 
 section.story .story-meta {

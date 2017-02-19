@@ -79,6 +79,9 @@ function getStoryImageCount(element) {
 }
 
 function getImages(feedObject) {
+  if (feedObject.rss && feedObject.rss.channel) {
+    feedObject = feedObject.rss.channel;
+  }
   return new Promise(function (resolve, reject) {
     var i = 0
       , stories = feedObject.story ? feedObject.story : feedObject.item
@@ -89,6 +92,17 @@ function getImages(feedObject) {
       if (obj.image) {
         prevPromise = prevPromise.then(function() {
           return downloadExternalFile(obj.image);
+        }).then(function(data) {
+          i += 1;
+          if (i === items) {
+            resolve(data);
+          }
+        }).catch(reject);
+      }
+
+      if (obj["specialNameImage"]) {
+        prevPromise = prevPromise.then(function() {
+          return downloadExternalFile(obj["specialNameImage"]);
         }).then(function(data) {
           i += 1;
           if (i === items) {
@@ -231,8 +245,11 @@ function removeOrphanedImages() {
             , stories = obj.story ? obj.story : obj.item;
 
           stories.forEach(function (ele) {
-            if (ele.image && images.indexOf(ele.image.split('/').pop()) === -1) {
-              images.push(ele.image.split('/').pop())
+            if (ele.image && images.indexOf(ele.image.split('/').pop()) === -1)  {
+                images.push(ele.image.split('/').pop())
+            }
+            if (ele["specialNameImage"] && images.indexOf(ele["specialNameImage"].split('/').pop()) === -1) {
+              images.push(ele["specialNameImage"].split('/').pop())
             }
           })
         });
@@ -936,6 +953,10 @@ function show (){
     setTimeout(function () {
         $('.loading-ui').fadeIn();
     }, 1);
+
+    setTimeout(function () {
+        $('.loading-ui').fadeOut(1000);
+    }, 15000);
 }
 
 module.exports = {
@@ -1012,6 +1033,10 @@ module.exports = {
         zh: "中文",
         ar: "الصينية",
         ru: "Китайский"
+    },
+    diwan: {
+        en: "Diwan",
+        ar: "ديوان"
     },
     english: {
         en: "English",
@@ -1682,13 +1707,16 @@ module.exports = {
 
 },{"../access":1}],18:[function(require,module,exports){
 module.exports = (function () {
-  var win = $(window)
-    , w = win.width()
-    , h = win.height();
+    var win = $(window)
+        , w = win.width()
+        , h = win.height();
 
-  if (parseInt(Math.min(w, h), 10) >= 550) {
-	  $('body').addClass('tablet');
-  }
+    if (parseInt(Math.min(w, h), 10) >= 550) {
+        $('body').addClass('tablet');
+        screen.unlockOrientation();
+    } else {
+        screen.lockOrientation('portrait');
+    }
 }());
 },{}],19:[function(require,module,exports){
 /*global module, require, $*/
@@ -1900,16 +1928,23 @@ function createPage(storyObj) {
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
-        , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
-      , topBar = $('<div/>', {
+      , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
+      , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
+      /*, topBar = specialImage ? null : $('<div/>', {
         addClass: 'top-bar', html: storyObj.docType || ''
-      })
+      })*/
       , storyTitle = $('<div/>', {
         addClass: 'story-title', text: storyObj.title || ''
       })
       , storyImage = $('<img>', {
         src: image, addClass: 'story-image'
       })
+      , storySpecialImage = specialImage ? $('<img>', {
+        src: specialImage, addClass: 'story-special-image'
+      }) : null
+      , storySpecialImageContainer = specialImage ? $('<div/>', {
+        addClass: 'story-special-image-container'
+      }).append(storySpecialImage) : null
       , storyAuthor = $('<div/>', {
         addClass: 'story-author', text: storyObj.author || ''
       })
@@ -1921,13 +1956,19 @@ function createPage(storyObj) {
       }).append(storyTitle).append(storyAuthor).append(storyDate)
       , storyTop = $('<div/>', {
         addClass: 'story-top'
-      }).append(storyImage).append(storyMeta)
+      }).append(storyImage).append(storySpecialImageContainer).append(storyMeta)
       , storyText = $('<div/>', {
         addClass: 'story-text', html: storyObj.description
       })
       , page = $('<div/>', {
         addClass: 'page'
-      }).append(topBar).append(storyTop).append(storyText);
+      });
+
+      /*if (!specialImage) {
+          page.append(topBar)
+      }*/
+
+      page.append(storyTop).append(storyText);
 
     storyImage.on('error', function (e) {
       $(this).prop('src', config.missingImage);
@@ -2347,8 +2388,7 @@ module.exports = function (filename, contents) {
 	return new Promise(function (resolve, reject) {
 
 		// full set of Crockford's problem characters https://github.com/douglascrockford/JSON-js/blob/master/json2.js
-		//[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff
-		var reg = /[\u000a\u000d\u2028\u2029]/g; // known problem characters, line terminators
+		var reg = /[\u0000\u000a\u000d\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g; // known problem characters, line terminators
 		contents = contents.replace(reg, '');
 
 		try {
@@ -2495,6 +2535,7 @@ module.exports = function (fileentry) {
 		};
 
 	return new Promise(function (resolve, reject) {
+		var platform = device.platform.toLowerCase();
 		var rejection = function (err) {
 			restoreHandler();
 			reject(err);
@@ -2504,11 +2545,23 @@ module.exports = function (fileentry) {
 		};
 		fileentry.file(function (f) {
 			reader.onloadend = function (s) {
+				if (platform.indexOf('ios') > -1) {
+					var req = new XMLHttpRequest();
+					req.open('GET', s.target._result, false);
+					req.overrideMimeType('application\/json; charset=utf-8');
+					req.send(null);
+					s.target._result = req.responseText;
+				}
 				restoreHandler();
 				resolve(s);
 			};
 			reader.onerror = rejection;
-			reader.readAsText(f);
+
+			if (platform.indexOf('ios') > -1) {
+				reader.readAsDataURL(f)
+			} else {
+				reader.readAsText(f)
+			}
 		})
 	});
 };
@@ -2521,9 +2574,9 @@ module.exports = function (fileentry) {
 },{}],38:[function(require,module,exports){
 module.exports = function (filewriter, contents) {
   return new Promise(function (resolve, reject) {
-    filewriter.onwriteend = resolve;
-  	filewriter.onerror = reject;
-    filewriter.write(contents);
+      filewriter.onwriteend = resolve;
+      filewriter.onerror = reject;
+      filewriter.write(contents);
   });
 };
 
@@ -2709,7 +2762,7 @@ var config = require('../app/config')
 
 function alert(message, callback, title, buttonLabel) {
 	var ok = toLocal(localStrings.ok) || "OK";
-	navigator.notification.alert(message, callback, title || config.appName, buttonLabel || ok);
+	navigator.notification.alert(message, callback, title || toLocal(localStrings.diwan) || config.appName, buttonLabel || ok);
 }
 
 function confirm(message, callback, title, buttonLabels) {
@@ -2718,7 +2771,7 @@ function confirm(message, callback, title, buttonLabels) {
 	var ok = toLocal(localStrings.ok) || "OK";
 	var cancel = toLocal(localStrings.cancel) || "Cancel";
 	var defaults = [ok, cancel];
-	navigator.notification.confirm(message, callback, title || config.appName, buttonLabels || defaults);
+	navigator.notification.confirm(message, callback, title || toLocal(localStrings.diwan) || config.appName, buttonLabels || defaults);
 }
 
 module.exports = {

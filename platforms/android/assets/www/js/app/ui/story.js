@@ -207,16 +207,23 @@ function createPage(storyObj) {
     var fs = config.fs.toURL()
       , path = fs + (fs.substr(-1) === '/' ? '' : '/')
       , image = storyObj.image ? path + storyObj.image.split('/').pop() : config.missingImage
-        , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
-      , topBar = $('<div/>', {
+      , specialImage = storyObj["specialNameImage"] && path + storyObj["specialNameImage"].split('/').pop()
+      , feedConfig = access.getFeedsFromConfig()[access.getCurrentId()]
+      /*, topBar = specialImage ? null : $('<div/>', {
         addClass: 'top-bar', html: storyObj.docType || ''
-      })
+      })*/
       , storyTitle = $('<div/>', {
         addClass: 'story-title', text: storyObj.title || ''
       })
       , storyImage = $('<img>', {
         src: image, addClass: 'story-image'
       })
+      , storySpecialImage = specialImage ? $('<img>', {
+        src: specialImage, addClass: 'story-special-image'
+      }) : null
+      , storySpecialImageContainer = specialImage ? $('<div/>', {
+        addClass: 'story-special-image-container'
+      }).append(storySpecialImage) : null
       , storyAuthor = $('<div/>', {
         addClass: 'story-author', text: storyObj.author || ''
       })
@@ -228,13 +235,19 @@ function createPage(storyObj) {
       }).append(storyTitle).append(storyAuthor).append(storyDate)
       , storyTop = $('<div/>', {
         addClass: 'story-top'
-      }).append(storyImage).append(storyMeta)
+      }).append(storyImage).append(storySpecialImageContainer).append(storyMeta)
       , storyText = $('<div/>', {
         addClass: 'story-text', html: storyObj.description
       })
       , page = $('<div/>', {
         addClass: 'page'
-      }).append(topBar).append(storyTop).append(storyText);
+      });
+
+      /*if (!specialImage) {
+          page.append(topBar)
+      }*/
+
+      page.append(storyTop).append(storyText);
 
     storyImage.on('error', function (e) {
       $(this).prop('src', config.missingImage);

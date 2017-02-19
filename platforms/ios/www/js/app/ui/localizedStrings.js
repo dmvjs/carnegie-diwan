@@ -68,6 +68,10 @@ module.exports = {
         ar: "الصينية",
         ru: "Китайский"
     },
+    diwan: {
+        en: "Diwan",
+        ar: "ديوان"
+    },
     english: {
         en: "English",
         zh: "英语",

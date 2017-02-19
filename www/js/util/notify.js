@@ -4,7 +4,7 @@ var config = require('../app/config')
 
 function alert(message, callback, title, buttonLabel) {
 	var ok = toLocal(localStrings.ok) || "OK";
-	navigator.notification.alert(message, callback, title || config.appName, buttonLabel || ok);
+	navigator.notification.alert(message, callback, title || toLocal(localStrings.diwan) || config.appName, buttonLabel || ok);
 }
 
 function confirm(message, callback, title, buttonLabels) {
@@ -13,7 +13,7 @@ function confirm(message, callback, title, buttonLabels) {
 	var ok = toLocal(localStrings.ok) || "OK";
 	var cancel = toLocal(localStrings.cancel) || "Cancel";
 	var defaults = [ok, cancel];
-	navigator.notification.confirm(message, callback, title || config.appName, buttonLabels || defaults);
+	navigator.notification.confirm(message, callback, title || toLocal(localStrings.diwan) || config.appName, buttonLabels || defaults);
 }
 
 module.exports = {

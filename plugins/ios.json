@@ -25,10 +25,16 @@
         "cordova-plugin-google-analytics": {
             "PACKAGE_NAME": "com.ceip.diwan"
         },
+        "cordova-plugin-headercolor": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.ceip.diwan"
         },
         "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.ceip.diwan"
+        },
+        "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "com.ceip.diwan"
         },
         "cordova-plugin-splashscreen": {

@@ -78,6 +78,9 @@ function getStoryImageCount(element) {
 }
 
 function getImages(feedObject) {
+  if (feedObject.rss && feedObject.rss.channel) {
+    feedObject = feedObject.rss.channel;
+  }
   return new Promise(function (resolve, reject) {
     var i = 0
       , stories = feedObject.story ? feedObject.story : feedObject.item
@@ -88,6 +91,17 @@ function getImages(feedObject) {
       if (obj.image) {
         prevPromise = prevPromise.then(function() {
           return downloadExternalFile(obj.image);
+        }).then(function(data) {
+          i += 1;
+          if (i === items) {
+            resolve(data);
+          }
+        }).catch(reject);
+      }
+
+      if (obj["specialNameImage"]) {
+        prevPromise = prevPromise.then(function() {
+          return downloadExternalFile(obj["specialNameImage"]);
         }).then(function(data) {
           i += 1;
           if (i === items) {
@@ -230,8 +244,11 @@ function removeOrphanedImages() {
             , stories = obj.story ? obj.story : obj.item;
 
           stories.forEach(function (ele) {
-            if (ele.image && images.indexOf(ele.image.split('/').pop()) === -1) {
-              images.push(ele.image.split('/').pop())
+            if (ele.image && images.indexOf(ele.image.split('/').pop()) === -1)  {
+                images.push(ele.image.split('/').pop())
+            }
+            if (ele["specialNameImage"] && images.indexOf(ele["specialNameImage"].split('/').pop()) === -1) {
+              images.push(ele["specialNameImage"].split('/').pop())
             }
           })
         });
