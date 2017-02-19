@@ -91,7 +91,6 @@ body.arabic-ui {
 /* header styles */
 
 header {
-    height: 64px;
     background-color: #001c3d;
     background-image: none;
     padding-top: 20px;
@@ -290,7 +289,7 @@ header .story .back .arrow {
     float: left;
     display: inline-block;
     background-image: url('../img/back-arrow.png');
-    background-position: left;
+    background-position: center;
     background-repeat: no-repeat;
     background-size: auto 44px;
 }
@@ -1137,12 +1136,10 @@ section.story .story-text a:visited {
     display: none;
 }
 
-section.story .next .story-text iframe,
 section.story .next .story-text object,
 section.story .next .story-text embed,
 section.story .next .story-text videoEmbed,
 section.story .next .story-text dc,
-section.story .previous .story-text iframe,
 section.story .previous .story-text object,
 section.story .previous .story-text embed,
 section.story .previous .story-text videoEmbed,
@@ -1159,7 +1156,6 @@ section.story .story-text dc {
     min-height: 170px;
 }
 
-.android.legacy section.story .story-text iframe,
 .android.legacy section.story .story-text object,
 .android.legacy section.story .story-text embed,
 .android.legacy section.story .story-text videoEmbed,
